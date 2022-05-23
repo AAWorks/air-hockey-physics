@@ -10,6 +10,15 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <link rel= "stylesheet" type= "text/css" href= "{{url_for('static', filename='css/game.css') }}">
+        <style>
+          body {
+            background: url("{{ url_for('static', filename='images/wood-floor.jpg') }}") no-repeat center center fixed; 
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            -o-background-size: cover;
+            background-size: cover;
+          }
+        </style>
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <a class="navbar-brand" href="/menu">| Physics Demo: Air Hockey</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -28,7 +37,7 @@
           </nav>
     </head>
     <body>
-        <img src="{{ url_for('static', filename='logo.png') }}" style="margin-left: 40%">
+        <img src="{{ url_for('static', filename='images/logo.png') }}" style="margin-left: 40%">
         <div class="table">
             <div class="table-inner">
                 <span class="table__goal-crease circle"></span>
