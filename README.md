@@ -1,1 +1,1 @@
-# air-hockey-physics
+# air-hockey
