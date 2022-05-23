@@ -9,7 +9,7 @@ def game():
     if request.method == 'POST':          
         values = [request.form['mass'], request.form['fric'], request.form['acceleration']]
         for i in range(len(values)):
-            if values[i].isalpha or values[i] == "":
+            if values[i].isalpha() or values[i] == "":
                 values[i] = defaults[i]
             else:
                 values[i] = float(values[i])
