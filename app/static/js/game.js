@@ -23,13 +23,11 @@ function Disc() {
 	this.x = this.x_init;
 	this.y = this.y_init;
 	this.radius = 34;
-	this.mass = 15;
 	this.velocityX = 15;
 	this.velocityY = 15;
+	this.mass = 15;
 	this.speed_limit = 10;
-	this.friction_x = 0.997;
-	this.friction_y = 0.997;
-	this.a = 1;
+	this.a = 1.0;
 	this.self_color = '#000000';
 
 	this.keepplayerInBoard = function() {
@@ -71,8 +69,9 @@ function Disc() {
 	}
 
 	this.move = function() {
-		this.velocityX *= this.friction_x;
-		this.velocityY *= this.friction_y;
+		friction_a = friction*9.8
+		if (this.velocityX != 0) this.velocityX += (this.velocityX > 0) ? -1*friction_a: friction_a;
+		if (this.velocityY != 0) this.velocityY += (this.velocityY > 0) ? -1*friction_a: friction_a;
 
 		this.x += this.velocityX;
 		this.y += this.velocityY;
@@ -90,7 +89,6 @@ function updateGame() {
 	board_elem.clearRect(0, 0, bwidth, bheight);
 	puck.draw();
 	puck.move();
-	//puck.discCollision();
 	puck.keepPuckInBoard();
 
 	requestAnimationFrame(updateGame);
