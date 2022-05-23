@@ -1,0 +1,16 @@
+0000000000000000000000000000000000000000 1f1c53530866eb87b9bf58f27e31722f879c91fd Alejandro Alonso <66284316+AAWorks@users.noreply.github.com> 1652888499 -0400	clone: from https://github.com/AAWorks/air-hockey.git
+1f1c53530866eb87b9bf58f27e31722f879c91fd be850acbb77db746c1f2d00bc91d891a985561ca Alejandro Alonso <66284316+AAWorks@users.noreply.github.com> 1652889509 -0400	commit: basic web setup
+be850acbb77db746c1f2d00bc91d891a985561ca 324fe6499f6298112769f5c523ceeb7856bb6c4b Alejandro Alonso <66284316+AAWorks@users.noreply.github.com> 1652889533 -0400	commit: css
+324fe6499f6298112769f5c523ceeb7856bb6c4b 14cce7c3385ee6bf4a3fab3e373e66e8ffc545bb Alejandro Alonso <66284316+AAWorks@users.noreply.github.com> 1652889593 -0400	commit: game setup
+14cce7c3385ee6bf4a3fab3e373e66e8ffc545bb 96912c7a90dc3aa7bc316a5167e87fa4f5088685 Alejandro Alonso <66284316+AAWorks@users.noreply.github.com> 1652891215 -0400	commit: text update
+96912c7a90dc3aa7bc316a5167e87fa4f5088685 eb308e8959fba4689731f1ee668541e195bf3e0f Alejandro Alonso <66284316+AAWorks@users.noreply.github.com> 1652891277 -0400	commit: game page
+eb308e8959fba4689731f1ee668541e195bf3e0f 408053cffa2cbdb7c0612a7911e71adbea4dd6f0 Alejandro Alonso <66284316+AAWorks@users.noreply.github.com> 1652891301 -0400	commit: basic win/loss page
+408053cffa2cbdb7c0612a7911e71adbea4dd6f0 eb9192e3467c2975d8eaadfe76aaf789440d72bd Alejandro Alonso <66284316+AAWorks@users.noreply.github.com> 1653250708 -0400	commit: images
+eb9192e3467c2975d8eaadfe76aaf789440d72bd 59de3db422200c84ab85cb55b1b6106eae2efb13 Alejandro Alonso <66284316+AAWorks@users.noreply.github.com> 1653250748 -0400	commit: WEBPAGES
+3cfd35cb7084c7d161ce13efae8146ed5a7324e0 8be4a32e9ac924b0e83a42ceb34d3662e74ef3dc Alejandro Alonso <66284316+AAWorks@users.noreply.github.com> 1653254392 -0400	commit: stylistic changes
+8be4a32e9ac924b0e83a42ceb34d3662e74ef3dc 4c80fe37f0807a78670c0ebc2968a450ce612738 Alejandro Alonso <66284316+AAWorks@users.noreply.github.com> 1653254452 -0400	commit: adding in adjustability and physics-ness
+4c80fe37f0807a78670c0ebc2968a450ce612738 7c209cb1be18c6c58041252f9a67a0d4a00c29b9 Alejandro Alonso <66284316+AAWorks@users.noreply.github.com> 1653269393 -0400	commit: setup for website
+7c209cb1be18c6c58041252f9a67a0d4a00c29b9 e4294013e8ba4f6001a9fa0edfc5e52385539931 Alejandro Alonso <66284316+AAWorks@users.noreply.github.com> 1653269416 -0400	commit: it looks pretty now
+e4294013e8ba4f6001a9fa0edfc5e52385539931 bd8f44108e5888f3f5089964271ccece24f3ca64 Alejandro Alonso <66284316+AAWorks@users.noreply.github.com> 1653269433 -0400	commit: bouncing puck
+bd8f44108e5888f3f5089964271ccece24f3ca64 1d711e4115e66a4b088cc0ad35f8bad550fa8a2a Alejandro Alonso <66284316+AAWorks@users.noreply.github.com> 1653269454 -0400	commit: the dreaded chalkboard
+1d711e4115e66a4b088cc0ad35f8bad550fa8a2a c460aa773b98d310a37e9ba558eb02788f5274d5 Alejandro Alonso <66284316+AAWorks@users.noreply.github.com> 1653269475 -0400	commit: a whole bunch of spiffy website design
