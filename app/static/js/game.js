@@ -14,21 +14,22 @@ board.height = bheight;
 
 board.focus();
 
-function Disc() {
+class Sphere {
+	constructor(x, y, r, m, a, c, vix, viy) {
+		this.x_init = x;
+		this.y_init = y;
+		this.x = this.x_init;
+		this.y = this.y_init;
+		this.radius = r;
+		this.mass = m;
+		this.a = a;
+		this.self_color = c;
+		this.velocityX = vix;
+		this.velocityY = viy;
+		this.speed_limit = 10;
+	}
 
-	this.x_init = center_x;
-	this.y_init = center_y;
-	this.x = this.x_init;
-	this.y = this.y_init;
-	this.radius = 35;
-	this.velocityX = 0;
-	this.velocityY = 0;
-	this.mass = 15;
-	this.speed_limit = 10;
-	this.a = 1.0;
-	this.self_color = '#000000';
-
-	this.playerRules = function() {
+	playerRules = function() {
 		if (this.y > (bheight - this.radius) || this.y < this.radius) {
 			if (this.y < this.radius) this.velocityY = 2;
 			else this.velocityY = -2;
@@ -40,19 +41,25 @@ function Disc() {
 		//if (playerOne.x > (center_x - playerOne.radius) && playerOne.x < center_x) playerOne.velocityX = -3;
 	}
 
-	this.puckRules = function() {
+	puckRules = function() {
+		function resetPuck() {
+			puck.x = center_x;
+			puck.y = center_y;
+			puck.velocityX = 8;
+			puck.velocityY = 8;
+		}
 		var goal_scored = this.y > (goal_corr + puck.radius) && this.y < (goal_corr + goal_area) - puck.radius
 		if (this.x > (bwidth - this.radius) || this.x < this.radius) {
 			if (this.x > (bwidth - this.radius)) {
 				this.x = bwidth - this.radius;
 				if (goal_scored) {
-					puck = new Disc(center_x, center_y);
+					resetPuck();
 					score[0] += 1;
 				}
 			} else {
 				this.x = this.radius;
 				if (goal_scored) {
-					puck = new Disc(center_x, center_y);
+					resetPuck();
 					score[1] += 1;
 				}
 			}
@@ -67,7 +74,7 @@ function Disc() {
 		}
 	}
 
-	this.draw = function() {
+	draw = function() {
 		board_elem.shadowColor = 'rgba(50, 50, 50, 0.25)';
 		board_elem.shadowOffsetX = 0;
 		board_elem.shadowOffsetY = 3;
@@ -79,8 +86,8 @@ function Disc() {
 		board_elem.fill();
 	}
 
-	this.move = function() {
-		friction_a = friction*9.8 // ma = umg, m cancels out, a = ug, g ~ 9.8
+	move = function() {
+		var friction_a = friction*9.8 // ma = umg, m cancels out, a = ug, g ~ 9.8
 		if (!(this.velocityX >= -1 * friction_a && this.velocityX <= friction_a)) this.velocityX += (this.velocityX > 0) ? -1*friction_a: friction_a;
 		else this.velocityX = 0;
 		if (!(this.velocityY >= -1 * friction_a && this.velocityY <= friction_a)) this.velocityY += (this.velocityY > 0) ? -1*friction_a: friction_a;
@@ -91,14 +98,15 @@ function Disc() {
 	}
 
 	//http://www.themcclungs.net/physics/download/H/Momentum/ElasticCollisions.pdf
-	this.discCollision = function(player) {	// polar-esque haha how FUN	
+	trackCollisions = function(player) {
 		function pythag(x_side, y_side) {
 			return Math.sqrt(Math.pow(x_side,2) + Math.pow(y_side,2));
 		}
-		function translate(x, y, sin, cos, reverse) { //converts points on to new coordinate grid for the collision handling (more on this below)
+		function translate(x, y, angle, reverse) { //converts points on to new coordinate grid for the collision handling (more on this below)
+			var theta = Math.cos(angle), phi = Math.sin(angle);
 			return {
-				x: (reverse) ? (x * cos + y * sin) : (x * cos - y * sin),
-				y: (reverse) ? (y * cos - x * sin) : (y * cos + x * sin)
+				x: (reverse) ? (x * theta + y * phi) : (x * theta - y * phi),
+				y: (reverse) ? (y * theta - x * phi) : (y * theta + x * phi)
 			};
 		}
 
@@ -107,56 +115,28 @@ function Disc() {
 			min_distance_between_centers = this.radius + player.radius;		
 		
 		if (current_distance_between_centers < min_distance_between_centers) {
-			// reset the coordinate grid to start at player (make it 0,0)
+			// take a snapshot of the collision --> have the collision move at the same rate as the player
+			// (centered around player)
 			var angle = Math.atan2(y_distance, x_distance), 
-				sin = Math.sin(angle),
-				cos = Math.cos(angle),
-				pos0 = {x: 0, y: 0}, // set the players position to 0,0 --> essentially remaking grid
-				pos1 = translate(x_distance, y_distance, sin, cos, true), //locate the puck's position on this new coordinate grid
-				v1 = translate(player.velocityX, player.velocityY, sin, cos, true), //get v1i from the og grids vectors
-				v2 = translate(this.velocityX, this.velocityY, sin, cos, true); // get v2i from the og grids vectors
-				velocityXTotal = v1.x - v2.x;
-				massTotal = (player.mass + this.mass); // jst good old m1v1
+				s_init = {x: 0, y: 0}, // set the players position to 0,0 --> essentially remaking grid
+				s = translate(x_distance, y_distance, angle, true), //locate the puck's position on this new coordinate grid
+				v1 = translate(player.velocityX, player.velocityY, angle, true), //get v1i from the og grids vectors
+				v2 = translate(this.velocityX, this.velocityY, angle, true); // get v2i from the og grids vectors
+				const velocityXTotal = v1.x - v2.x;
+				const massTotal = (player.mass + this.mass); // jst good old m1v1
 			
 			// good old equation for v2f elastic collisions using m1, m2, v1i, and v2i
 			v1.x = ((player.mass - this.mass) * v1.x + 2 * this.mass * v2.x) / massTotal; 
 			v2.x = velocityXTotal + v1.x; //obtained v1f and v2f
-
-			// this stuff is to prevent sticking after collisions (basically when a collision results in a too low of a velocity to escape the overlap this accounts for it)
-			// thanks to the intertrash for the following, this was a pain to figure out
-			var absV = Math.abs(v1.x) + Math.abs(v2.x), 
-				overlap = (player.radius + this.radius) - Math.abs(pos0.x - pos1.x);
-
-			pos0.x += v1.x / absV * overlap;
-			pos1.x += v2.x / absV * overlap;
-			
-			// now convert everything back to yk, the og coordinate grid
-			var pos0F = translate(pos0.x, pos0.y, sin, cos, false), 
-				pos1F = translate(pos1.x, pos1.y, sin, cos, false);
-
-			this.x = player.x + pos1F.x; //apply position changes so we dont get infinite collisions
-			this.y = player.y + pos1F.y;
-			player.x = player.x + pos0F.x;
-			player.y = player.y + pos0F.y; //these vars rnt named the best ik mb
-
-			var vel0F = translate(v1.x, v1.y, sin, cos, false), 
-				vel1F = translate(v2.x, v2.y, sin, cos, false);
-			
-			// finally finally finally after taking a trip to theta land, we come back and adjust the vars we actually care about
-			player.velocityX = vel0F.x;
-			player.velocityY = vel0F.y;
-
-			this.velocityX = vel1F.x;
-			this.velocityY = vel1F.y;
 		}
 	}
 }
 
 function moveplayerone(key) {
-	if (key === "w" && playerOne.velocityY < playerOne.speed_limit) playerOne.velocityY -= playerOne.acceleration;
-	if (key === "s" && playerOne.velocityY < playerOne.speed_limit) playerOne.velocityY += playerOne.acceleration;
-	if (key === "d" && playerOne.velocityX < playerOne.speed_limit) playerOne.velocityX += playerOne.acceleration;
-	if (key === "a" && playerOne.velocityX < playerOne.speed_limit) playerOne.velocityX -= playerOne.acceleration;
+	if (key === "w" && playerOne.velocityY < playerOne.speed_limit) playerOne.velocityY -= playerOne.a;
+	if (key === "s" && playerOne.velocityY < playerOne.speed_limit) playerOne.velocityY += playerOne.a;
+	if (key === "d" && playerOne.velocityX < playerOne.speed_limit) playerOne.velocityX += playerOne.a;
+	if (key === "a" && playerOne.velocityX < playerOne.speed_limit) playerOne.velocityX -= playerOne.a;
 }
 
 function updateGame() {
@@ -164,7 +144,7 @@ function updateGame() {
 	puck.draw();
 	puck.move();
 	puck.puckRules();
-	puck.discCollision(playerOne);
+	puck.trackCollisions(playerOne);
 	playerOne.draw();
 	playerOne.move();
 	playerOne.playerRules();
@@ -176,13 +156,7 @@ document.addEventListener("keydown", function(e) {
 	moveplayerone(e.key);
 });
 
-var puck = new Disc();
-
-var playerOne = new Disc();
-playerOne.x_init = 130;
-playerOne.mass = 45;
-playerOne.x = playerOne.x_init;
-playerOne.radius = 45;
-playerOne.acceleration = 5;
+const puck = new Sphere(center_x, center_y, 35, 15, 1, '#000000', 8, 8);
+const playerOne = new Sphere(120, center_y, 45, 45, 5, '#000000', 0, 0);
 
 updateGame();
