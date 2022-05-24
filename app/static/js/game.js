@@ -129,6 +129,24 @@ class Sphere {
 			v1.x = ((player.mass - this.mass) * v1.x + 2 * this.mass * v2.x) / massTotal; 
 			v2.x = velocityXTotal + v1.x; //obtained v1f and v2f
 		}
+		// now convert everything back to yk, the og coordinate grid
+		var s_init_f = translate(s_init.x, s_init.y, angle, false), 
+			sf = translate(s.x, s.y, angle, false);
+
+		this.x = player.x + sf.x; //apply position changes so we dont get infinite collisions
+		this.y = player.y + sf.y;
+		player.x = player.x + s_init_f.x;
+		player.y = player.y + s_init_f.y; //these vars rnt named the best ik mb
+
+		var v1f = translate(v1.x, v1.y, angle, false), 
+			v2f = translate(v2.x, v2.y, angle, false);
+		
+		// finally finally finally after taking a trip to theta land, we come back and adjust the vars we actually care about
+		player.velocityX = v1f.x;
+		player.velocityY = v1f.y;
+
+		this.velocityX = v2f.x;
+		this.velocityY = v2f.y;
 	}
 }
 
