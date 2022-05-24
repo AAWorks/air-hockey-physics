@@ -81,8 +81,10 @@ function Disc() {
 
 	this.move = function() {
 		friction_a = friction*9.8 // ma = umg, m cancels out, a = ug, g ~ 9.8
-		if (this.velocityX != 0) this.velocityX += (this.velocityX > 0) ? -1*friction_a: friction_a;
-		if (this.velocityY != 0) this.velocityY += (this.velocityY > 0) ? -1*friction_a: friction_a;
+		if (!(this.velocityX >= -1 * friction_a && this.velocityX <= friction_a)) this.velocityX += (this.velocityX > 0) ? -1*friction_a: friction_a;
+		else this.velocityX = 0;
+		if (!(this.velocityY >= -1 * friction_a && this.velocityY <= friction_a)) this.velocityY += (this.velocityY > 0) ? -1*friction_a: friction_a;
+		else this.velocityY = 0;
 
 		this.x += this.velocityX;
 		this.y += this.velocityY;
@@ -93,7 +95,7 @@ function Disc() {
 		function pythag(x_side, y_side) {
 			return Math.sqrt(Math.pow(x_side,2) + Math.pow(y_side,2));
 		}
-		function rotate(x, y, sin, cos, reverse) { //converts points on to new coordinate grid for the collision handling (more on this below)
+		function translate(x, y, sin, cos, reverse) { //converts points on to new coordinate grid for the collision handling (more on this below)
 			return {
 				x: (reverse) ? (x * cos + y * sin) : (x * cos - y * sin),
 				y: (reverse) ? (y * cos - x * sin) : (y * cos + x * sin)
@@ -110,11 +112,11 @@ function Disc() {
 				sin = Math.sin(angle),
 				cos = Math.cos(angle),
 				pos0 = {x: 0, y: 0}, // set the players position to 0,0 --> essentially remaking grid
-				pos1 = rotate(x_distance, y_distance, sin, cos, true), //locate the puck's position on this new coordinate grid
-				v1 = rotate(player.velocityX, player.velocityY, sin, cos, true), //get v1i from the og grids vectors
-				v2 = rotate(this.velocityX, this.velocityY, sin, cos, true); // get v2i from the og grids vectors
+				pos1 = translate(x_distance, y_distance, sin, cos, true), //locate the puck's position on this new coordinate grid
+				v1 = translate(player.velocityX, player.velocityY, sin, cos, true), //get v1i from the og grids vectors
+				v2 = translate(this.velocityX, this.velocityY, sin, cos, true); // get v2i from the og grids vectors
 				velocityXTotal = v1.x - v2.x;
-				massTotal = (player.mass + this.mass) // jst good old m1v1
+				massTotal = (player.mass + this.mass); // jst good old m1v1
 			
 			// good old equation for v2f elastic collisions using m1, m2, v1i, and v2i
 			v1.x = ((player.mass - this.mass) * v1.x + 2 * this.mass * v2.x) / massTotal; 
@@ -129,16 +131,16 @@ function Disc() {
 			pos1.x += v2.x / absV * overlap;
 			
 			// now convert everything back to yk, the og coordinate grid
-			var pos0F = rotate(pos0.x, pos0.y, sin, cos, false), 
-				pos1F = rotate(pos1.x, pos1.y, sin, cos, false);
+			var pos0F = translate(pos0.x, pos0.y, sin, cos, false), 
+				pos1F = translate(pos1.x, pos1.y, sin, cos, false);
 
 			this.x = player.x + pos1F.x; //apply position changes so we dont get infinite collisions
 			this.y = player.y + pos1F.y;
 			player.x = player.x + pos0F.x;
 			player.y = player.y + pos0F.y; //these vars rnt named the best ik mb
 
-			var vel0F = rotate(v2.x, v1.y, sin, cos, false), 
-				vel1F = rotate(v2.x, v1.y, sin, cos, false);
+			var vel0F = translate(v1.x, v1.y, sin, cos, false), 
+				vel1F = translate(v2.x, v2.y, sin, cos, false);
 			
 			// finally finally finally after taking a trip to theta land, we come back and adjust the vars we actually care about
 			player.velocityX = vel0F.x;
