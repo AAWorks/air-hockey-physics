@@ -5,7 +5,7 @@ app.secret_key = 'physiscmakesmesad'
 
 @app.route('/', methods=['GET','POST'])
 def game():
-    defaults = [15.0, 0.01, 1.0]
+    defaults = [15.0, 0.001, 1.0]
     if request.method == 'POST':          
         values = [request.form['mass'], request.form['fric'], request.form['acceleration']]
         for i in range(len(values)):

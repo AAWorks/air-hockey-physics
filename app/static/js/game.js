@@ -7,7 +7,7 @@ var board = document.getElementById("canvas"),
 	goal = document.getElementsByClassName('table__goal-crease'),
 	goal_area = goal[0].clientHeight,
 	goal_corr = (bheight - goal_area) / 2,
-	score = [];
+	score = [0, 0];
 
 board.width = bwidth;
 board.height = bheight;
@@ -20,7 +20,7 @@ function Disc() {
 	this.y_init = center_y;
 	this.x = this.x_init;
 	this.y = this.y_init;
-	this.radius = 34;
+	this.radius = 35;
 	this.velocityX = 0;
 	this.velocityY = 0;
 	this.mass = 15;
@@ -29,24 +29,35 @@ function Disc() {
 	this.self_color = '#000000';
 
 	this.playerRules = function() {
-		if (this.x > (bwidth - this.radius) || this.x < this.radius) {
-			if (this.x < this.radius) this.velocityX = 2;
-			else this.velocityX = -2;
-		}
 		if (this.y > (bheight - this.radius) || this.y < this.radius) {
 			if (this.y < this.radius) this.velocityY = 2;
 			else this.velocityY = -2;
 		}
-		if (playerOne.x > (center_x - playerOne.radius) && playerOne.x < center_x) playerOne.velocityX = -3;
+		if (this.x > (bwidth - this.radius) || this.x < this.radius) {
+			if (this.x < this.radius) this.velocityX = 2;
+			else this.velocityX = -2;
+		}
+		//if (playerOne.x > (center_x - playerOne.radius) && playerOne.x < center_x) playerOne.velocityX = -3;
 	}
 
 	this.puckRules = function() {
+		var goal_scored = this.y > (goal_corr + puck.radius) && this.y < (goal_corr + goal_area) - puck.radius
 		if (this.x > (bwidth - this.radius) || this.x < this.radius) {
-			if (this.x > (bwidth - this.radius)) this.x = bwidth - this.radius;
-			else this.x = this.radius;
-
+			if (this.x > (bwidth - this.radius)) {
+				this.x = bwidth - this.radius;
+				if (goal_scored) {
+					puck = new Disc(center_x, center_y);
+					score[0] += 1;
+				}
+			} else {
+				this.x = this.radius;
+				if (goal_scored) {
+					puck = new Disc(center_x, center_y);
+					score[1] += 1;
+				}
+			}
+			if (score[0] === 3 || score[1] === 3) window.location.replace((score[0] === 3) ? "/win" : "/lose");
 			this.velocityX = -this.velocityX;
-			if (this.y > (goal_corr + puck.radius) && this.y < (goal_corr + goal_area) - puck.radius) puck = new Disc(center_x, center_y);
 		}	
 		if (this.y > (bheight - this.radius) || this.y < this.radius) {
 			if (this.y > (bheight - this.radius)) this.y = bheight - this.radius;
@@ -69,7 +80,7 @@ function Disc() {
 	}
 
 	this.move = function() {
-		friction_a = friction*9.8
+		friction_a = friction*9.8 // ma = umg, m cancels out, a = ug, g ~ 9.8
 		if (this.velocityX != 0) this.velocityX += (this.velocityX > 0) ? -1*friction_a: friction_a;
 		if (this.velocityY != 0) this.velocityY += (this.velocityY > 0) ? -1*friction_a: friction_a;
 
@@ -77,14 +88,8 @@ function Disc() {
 		this.y += this.velocityY;
 	}
 
+	//http://www.themcclungs.net/physics/download/H/Momentum/ElasticCollisions.pdf
 	
-}
-
-function rotate(x, y, sin, cos, reverse) {
-	return {
-		x: (reverse) ? (x * cos + y * sin) : (x * cos - y * sin),
-		y: (reverse) ? (y * cos - x * sin) : (y * cos + x * sin)
-	};
 }
 
 function moveplayerone(key) {
@@ -99,6 +104,7 @@ function updateGame() {
 	puck.draw();
 	puck.move();
 	puck.puckRules();
+	puck.discCollision(playerOne);
 	playerOne.draw();
 	playerOne.move();
 	playerOne.playerRules();
@@ -113,10 +119,10 @@ document.addEventListener("keydown", function(e) {
 var puck = new Disc();
 
 var playerOne = new Disc();
-playerOne.radius += 10;
-playerOne.acceleration = 5;
-playerOne.x_init = 125;
-playerOne.mass = 50;
+playerOne.x_init = 130;
+playerOne.mass = 45;
 playerOne.x = playerOne.x_init;
+playerOne.radius = 45;
+playerOne.acceleration = 5;
 
 updateGame();
