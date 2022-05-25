@@ -61,7 +61,7 @@ class Sphere {
 					score[0] += 1;
 					resetPuck(puck_mass)
 			scorecard.innerHTML = 
-						"<img src='static/images/" + score[0].toString() + ".png' style='float: left; margin-left: 8%'><img src='static/images/" + score[1].toString() + ".png' style='float: right; margin-right: 10%'>";
+						"<img src='static/images/" + score[0].toString() + ".png' style='float: left;'><img src='static/images/" + score[1].toString() + ".png' style='float: right;'>";
 				}
 			} else {
 				this.x = this.radius;
@@ -69,8 +69,7 @@ class Sphere {
 					score[1] += 1;
 					resetPuck(puck_mass)
 					scorecard.innerHTML = 
-				"<img src='static/images/" + score[0].toString() + ".png' style='float: left; margin-left: 8%'><img src='static/images/" + score[1].toString() + ".png' style='float: right; margin-right: 10%'>";
-				}
+					"<img src='static/images/" + score[0].toString() + ".png' style='float: left;'><img src='static/images/" + score[1].toString() + ".png' style='float: right;'>";				}
 			}
 			if (score[0] === 3 || score[1] === 3) {
 				resetPuck(player_mass * 10);
@@ -202,8 +201,8 @@ window.addEventListener("keydown", function(e) {
     }
 }, false);
 
-const puck = new Sphere(center_x, center_y, 35, puck_mass, 1, '#000000', 0, 0);
-const playerOne = new Sphere(120, center_y, 45, player_mass, 5, '#000000', 0, 0);
-const playerTwo = new Sphere(bwidth - 120, center_y, 45, player_mass, 5, '#000000', 0, 0)
+const puck = new Sphere(center_x, center_y, 35, puck_mass, 1, '#696969', 0, 0);
+const playerOne = new Sphere(120, center_y, 45, player_mass, 5, '#87CEFA', 0, 0);
+const playerTwo = new Sphere(bwidth - 120, center_y, 45, player_mass, 5, '#FF8C00', 0, 0)
 
 updateGame();
