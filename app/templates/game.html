@@ -17,12 +17,10 @@
             -moz-background-size: cover;
             -o-background-size: cover;
             background-size: cover;
-            min-width: 1400px;
-            min-height: 800px;
           }
         </style>
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <a class="navbar-brand" href="/menu">| Physics Demo: Air Hockey</a>
+            <a class="navbar-brand" href="/">| Physics Demo: Air Hockey</a>
             <div class="collapse navbar-collapse" id="navbarNav">
               <ul class="navbar-nav">
                 <li class="nav-item active">
@@ -55,14 +53,18 @@
         <script>
           var friction = {{ fric|tojson }};
           var puck_mass = {{ puck_mass|tojson }};
-          var player_mass = {{ player_mass|tojson }}
+          var player_mass = {{ player_mass|tojson }};
+	        var bheight = {{ h|tojson }} - 30,
+	          bwidth = {{ w|tojson }} - 30;
+            puck_r = {{ puck_r|tojson }};
+            player_r = {{ player_r|tojson }};
         </script>
         <script src="{{ url_for('static', filename='js/game.js') }}"></script>
         <div style="width: 700px; margin: 0 auto; float: none; margin-top: 560px;">
           <img src="{{ url_for('static', filename='images/wasd.png') }}" style="float: left;">
           <img src="{{ url_for('static', filename='images/arrows.png') }}" style="float: right;">
         </div>
-        <form method="post" action="/">
+        <form method="post" action="/game">
             <div class="input-group mb-3" style="width: 900px; margin: 0 auto; float: none; margin-top: 720px;">
                 <div class="input-group-prepend">
                 <span class="input-group-text" id="inputGroup-sizing-default">Puck Mass</span>
