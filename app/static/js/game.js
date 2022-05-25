@@ -38,32 +38,44 @@ class Sphere {
 			if (this.x < this.radius) this.velocityX = 2;
 			else this.velocityX = -2;
 		}
-		//if (playerOne.x > (center_x - playerOne.radius) && playerOne.x < center_x) playerOne.velocityX = -3;
+		if (playerOne.x > (center_x - playerOne.radius) && playerOne.x < center_x) playerOne.velocityX = -3;
+		if (playerTwo.x < (center_x + playerTwo.radius) && playerTwo.x > center_x) playerTwo.velocityX = 3;
+
 	}
 
 	puckRules = function() {
-		function resetPuck() {
+		function resetPuck(m) {
 			puck.x = center_x;
 			puck.y = center_y;
-			puck.velocityX = 8;
-			puck.velocityY = 8;
+			puck.velocityX = 0;
+			puck.velocityY = 0;
+			puck.mass = m;
 		}
 		var goal_scored = this.y > (goal_corr + puck.radius) && this.y < (goal_corr + goal_area) - puck.radius
+		const scorecard = document.getElementById('scorecard');
+		
 		if (this.x > (bwidth - this.radius) || this.x < this.radius) {
 			if (this.x > (bwidth - this.radius)) {
 				this.x = bwidth - this.radius;
 				if (goal_scored) {
-					resetPuck();
 					score[0] += 1;
+					resetPuck(puck_mass)
+			scorecard.innerHTML = 
+						"<img src='static/images/" + score[0].toString() + ".png' style='float: left; margin-left: 8%'><img src='static/images/" + score[1].toString() + ".png' style='float: right; margin-right: 10%'>";
 				}
 			} else {
 				this.x = this.radius;
 				if (goal_scored) {
-					resetPuck();
 					score[1] += 1;
+					resetPuck(puck_mass)
+					scorecard.innerHTML = 
+				"<img src='static/images/" + score[0].toString() + ".png' style='float: left; margin-left: 8%'><img src='static/images/" + score[1].toString() + ".png' style='float: right; margin-right: 10%'>";
 				}
 			}
-			if (score[0] === 3 || score[1] === 3) window.location.replace((score[0] === 3) ? "/win" : "/lose");
+			if (score[0] === 3 || score[1] === 3) {
+				resetPuck(player_mass * 10);
+				setTimeout(function(){window.location.replace((score[0] === 3) ? "/win" : "/lose")}, 2000);
+			}
 			this.velocityX = -this.velocityX;
 		}	
 		if (this.y > (bheight - this.radius) || this.y < this.radius) {
@@ -128,33 +140,39 @@ class Sphere {
 			// good old equation for v2f elastic collisions using m1, m2, v1i, and v2i
 			v1.x = ((player.mass - this.mass) * v1.x + 2 * this.mass * v2.x) / massTotal; 
 			v2.x = velocityXTotal + v1.x; //obtained v1f and v2f
+
+			// now convert everything back to yk, the og coordinate grid
+			var s_init_f = translate(s_init.x, s_init.y, angle, false), 
+				sf = translate(s.x, s.y, angle, false);
+
+			this.x = player.x + sf.x; //apply position changes so we dont get infinite collisions
+			this.y = player.y + sf.y;
+			player.x = player.x + s_init_f.x;
+			player.y = player.y + s_init_f.y; //these vars rnt named the best ik mb
+
+			var v1f = translate(v1.x, v1.y, angle, false), 
+				v2f = translate(v2.x, v2.y, angle, false);
+			
+			// finally finally finally after taking a trip to theta land, we come back and adjust the vars we actually care about
+			player.velocityX = v1f.x;
+			player.velocityY = v1f.y;
+
+			this.velocityX = v2f.x;
+			this.velocityY = v2f.y;
 		}
-		// now convert everything back to yk, the og coordinate grid
-		var s_init_f = translate(s_init.x, s_init.y, angle, false), 
-			sf = translate(s.x, s.y, angle, false);
-
-		this.x = player.x + sf.x; //apply position changes so we dont get infinite collisions
-		this.y = player.y + sf.y;
-		player.x = player.x + s_init_f.x;
-		player.y = player.y + s_init_f.y; //these vars rnt named the best ik mb
-
-		var v1f = translate(v1.x, v1.y, angle, false), 
-			v2f = translate(v2.x, v2.y, angle, false);
-		
-		// finally finally finally after taking a trip to theta land, we come back and adjust the vars we actually care about
-		player.velocityX = v1f.x;
-		player.velocityY = v1f.y;
-
-		this.velocityX = v2f.x;
-		this.velocityY = v2f.y;
 	}
 }
 
-function moveplayerone(key) {
-	if (key === "w" && playerOne.velocityY < playerOne.speed_limit) playerOne.velocityY -= playerOne.a;
-	if (key === "s" && playerOne.velocityY < playerOne.speed_limit) playerOne.velocityY += playerOne.a;
-	if (key === "d" && playerOne.velocityX < playerOne.speed_limit) playerOne.velocityX += playerOne.a;
-	if (key === "a" && playerOne.velocityX < playerOne.speed_limit) playerOne.velocityX -= playerOne.a;
+function bindings(key, player, keys) {
+	if (key === keys[0] && player.velocityY < player.speed_limit) player.velocityY -= player.a;
+	if (key === keys[1] && player.velocityY < player.speed_limit) player.velocityY += player.a;
+	if (key === keys[2] && player.velocityX < player.speed_limit) player.velocityX += player.a;
+	if (key === keys[3] && player.velocityX < player.speed_limit) player.velocityX -= player.a;
+}
+
+function moveplayer(key) {
+	bindings(key, playerOne, ["w","s","d","a"])
+	bindings(key, playerTwo, ["ArrowUp","ArrowDown","ArrowRight","ArrowLeft"])
 }
 
 function updateGame() {
@@ -163,18 +181,29 @@ function updateGame() {
 	puck.move();
 	puck.puckRules();
 	puck.trackCollisions(playerOne);
+	puck.trackCollisions(playerTwo);
 	playerOne.draw();
 	playerOne.move();
 	playerOne.playerRules();
+	playerTwo.draw();
+	playerTwo.move();
+	playerTwo.playerRules();
 
 	requestAnimationFrame(updateGame);
 }
 
 document.addEventListener("keydown", function(e) {
-	moveplayerone(e.key);
+	moveplayer(e.key);
 });
 
-const puck = new Sphere(center_x, center_y, 35, 15, 1, '#000000', 8, 8);
-const playerOne = new Sphere(120, center_y, 45, 45, 5, '#000000', 0, 0);
+window.addEventListener("keydown", function(e) {
+    if(["Space","ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].indexOf(e.code) > -1) {
+        e.preventDefault();
+    }
+}, false);
+
+const puck = new Sphere(center_x, center_y, 35, puck_mass, 1, '#000000', 0, 0);
+const playerOne = new Sphere(120, center_y, 45, player_mass, 5, '#000000', 0, 0);
+const playerTwo = new Sphere(bwidth - 120, center_y, 45, player_mass, 5, '#000000', 0, 0)
 
 updateGame();
