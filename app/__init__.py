@@ -3,9 +3,16 @@ from flask import Flask, render_template, request, session, redirect, url_for
 app = Flask(__name__)
 app.secret_key = 'physiscmakesmesad'
 
+defaults = {"puckmass" : 15.0, 
+    "fric": 0.001, 
+    "playermass": 45.0,
+    "height": 550,
+    "width": 800,
+    "player_r": 45,
+    "puck_r": 35}
+
 @app.route('/', methods=['GET','POST'])
 def game():
-    defaults = [15.0, 0.001, 45.0]
     if request.method == 'POST':          
         values = [request.form['mass'], request.form['fric'], request.form['player_mass']]
         for i in range(len(values)):
@@ -13,8 +20,8 @@ def game():
                 values[i] = defaults[i]
             else:
                 values[i] = float(values[i])
-        return render_template("game.html", puck_mass = values[0], fric = values[1], player_mass=values[2])
-    return render_template("game.html", puck_mass=defaults[0], fric=defaults[1], player_mass=defaults[2])
+        return render_template("game.html", puck_mass = values[0], fric = values[1], player_mass=values[2], h=defaults["height"], w=defaults["width"], puck_r=defaults["puck_r"], player_r=defaults["player_r"])
+    return render_template("game.html", puck_mass=defaults["puckmass"], fric=defaults["fric"], player_mass=defaults["playermass"], h=defaults['height'], w=defaults['width'], puck_r=defaults["puck_r"], player_r=defaults["player_r"])
 
 @app.route('/concepts', methods=['GET','POST'])
 def concepts():
