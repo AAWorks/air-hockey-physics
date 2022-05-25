@@ -37,10 +37,15 @@
           </ul>
         </div>
       </nav>
+      <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
   </head>
 
-  <body>
-    <h1 style="text-align: center;"></h1>
+  <body style="color: white;"> <br>
+    <h1 style="text-align: center;"><em>2D Elastic Collisions</em></h1>
+    <h5>\[v_{1f} = {m_1 - m_2 \over m1 + m2} v_{1i} + {2m_2 \over m1 + m2} v_{2i} \]</h5>
+    <h5>\[v_{2f} = v_{1i} - v_{2i} + v_{1f}\]</h5>
+    <img src="{{ url_for('static', filename='images/diagram.png') }}" class="rounded mx-auto d-block">
   </body>
 
 </html>

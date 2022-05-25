@@ -17,13 +17,12 @@
             -moz-background-size: cover;
             -o-background-size: cover;
             background-size: cover;
+            min-width: 1400px;
+            min-height: 800px;
           }
         </style>
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <a class="navbar-brand" href="/menu">| Physics Demo: Air Hockey</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"></span>
-            </button>
             <div class="collapse navbar-collapse" id="navbarNav">
               <ul class="navbar-nav">
                 <li class="nav-item active">
@@ -37,7 +36,13 @@
           </nav>
     </head>
     <body>
-        <img src="{{ url_for('static', filename='images/logo.png') }}" style="margin-left: 40%">
+        <div style="width: 1000px; margin: 0 auto; float: none;">
+          <img src="{{ url_for('static', filename='images/logo.png') }}" class="rounded mx-auto d-block">
+          <div style="width: 100%;" id="scorecard">
+            <img src="{{ url_for('static', filename='images/0.png') }}" style="float: left;">
+            <img src="{{ url_for('static', filename='images/0.png') }}" style="float: right;">
+          </div>
+        </div>
         <div class="table">
             <div class="table-inner">
                 <span class="table__goal-crease circle"></span>
@@ -49,13 +54,16 @@
         <canvas id="canvas" class="table table--canvas" tabindex="0"></canvas>
         <script>
           var friction = {{ fric|tojson }};
+          var puck_mass = {{ puck_mass|tojson }};
+          var player_mass = {{ player_mass|tojson }}
         </script>
         <script src="{{ url_for('static', filename='js/game.js') }}"></script>
-        <script>
-          puck.mass = {{ mass|tojson }};
-        </script>
+        <div style="width: 700px; margin: 0 auto; float: none; margin-top: 560px;">
+          <img src="{{ url_for('static', filename='images/wasd.png') }}" style="float: left;">
+          <img src="{{ url_for('static', filename='images/arrows.png') }}" style="float: right;">
+        </div>
         <form method="post" action="/">
-            <div class="input-group mb-3" style="width: 60%; margin: 0 auto; float: none; margin-top: 35%;">
+            <div class="input-group mb-3" style="width: 900px; margin: 0 auto; float: none; margin-top: 720px;">
                 <div class="input-group-prepend">
                 <span class="input-group-text" id="inputGroup-sizing-default">Puck Mass</span>
                 </div>
@@ -65,9 +73,9 @@
                 </div>
                 <input type="text" name="fric" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
                 <div class="input-group-prepend">
-                  <span class="input-group-text" id="inputGroup-sizing-default">Acceleration</span>
-                </div>
-                <input type="text" name="acceleration" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+                  <span class="input-group-text" id="inputGroup-sizing-default">Player Masses</span>
+              </div>
+              <input type="text" name="player_mass" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
             </div>
             <div class="input-group mb-3" style="width: 180px; margin: 0 auto; float: none;">
                 <span class="input-group-btn">
