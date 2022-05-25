@@ -1,7 +1,5 @@
 var board = document.getElementById("canvas"),
 	board_elem = board.getContext('2d'),
-	bwidth = 770,
-	bheight = 520,
 	center_x = bwidth / 2,
 	center_y = bheight / 2,
 	goal = document.getElementsByClassName('table__goal-crease'),
@@ -120,6 +118,9 @@ class Sphere {
 				y: (reverse) ? (y * theta - x * phi) : (y * theta + x * phi)
 			};
 		}
+		function fix_pos(v){ //75 is total r
+			return v * ((player_r + puck_r) - Math.abs(s.x)) / (Math.abs(v1.x) + Math.abs(v2.x)) 
+		}
 
 		var x_distance = this.x - player.x, y_distance = this.y - player.y
 		var current_distance_between_centers = pythag(x_distance, y_distance),
@@ -139,6 +140,9 @@ class Sphere {
 			// good old equation for v2f elastic collisions using m1, m2, v1i, and v2i
 			v1.x = ((player.mass - this.mass) * v1.x + 2 * this.mass * v2.x) / massTotal; 
 			v2.x = velocityXTotal + v1.x; //obtained v1f and v2f
+			//fix sticking
+			s_init.x += fix_pos(v1.x)
+			s.x += fix_pos(v2.x)
 
 			// now convert everything back to yk, the og coordinate grid
 			var s_init_f = translate(s_init.x, s_init.y, angle, false), 
@@ -201,8 +205,8 @@ window.addEventListener("keydown", function(e) {
     }
 }, false);
 
-const puck = new Sphere(center_x, center_y, 35, puck_mass, 1, '#696969', 0, 0);
-const playerOne = new Sphere(120, center_y, 45, player_mass, 5, '#87CEFA', 0, 0);
-const playerTwo = new Sphere(bwidth - 120, center_y, 45, player_mass, 5, '#FF8C00', 0, 0)
+const puck = new Sphere(center_x, center_y, puck_r, puck_mass, 1, '#696969', 0, 0);
+const playerOne = new Sphere(120, center_y, player_r, player_mass, 5, '#87CEFA', 0, 0);
+const playerTwo = new Sphere(bwidth - 120, center_y, player_r, player_mass, 5, '#FF8C00', 0, 0)
 
 updateGame();

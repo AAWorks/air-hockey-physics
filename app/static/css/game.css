@@ -1,11 +1,6 @@
 * {
     box-sizing: border-box;
   }
-  @media only screen and (min-width: 1700px) and (min-height: 900px) {
-    body {
-        display: none;
-    }
-  }
   .circle {
     width: 140px;
     height: 140px;
@@ -20,10 +15,9 @@
   .table {
     width: 800px;
     height: 550px;
-    margin-top: -275px;
+    margin-top: 0;
     margin-left: -400px;
     position: absolute;
-    top: 50%;
     left: 50%;
     border: 15px solid #2e2e2e;
     border-radius: 70px;
@@ -48,7 +42,7 @@
   .table--canvas {
     width: 770px;
     height: 520px;
-    margin-top: -260px;
+    margin-top: 15px;
     margin-left: -385px;
     background-color: transparent;
     border-radius: 55px;
