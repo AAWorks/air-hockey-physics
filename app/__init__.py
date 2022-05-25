@@ -5,16 +5,16 @@ app.secret_key = 'physiscmakesmesad'
 
 @app.route('/', methods=['GET','POST'])
 def game():
-    defaults = [15.0, 0.001, 1.0]
+    defaults = [15.0, 0.001, 45.0]
     if request.method == 'POST':          
-        values = [request.form['mass'], request.form['fric'], request.form['acceleration']]
+        values = [request.form['mass'], request.form['fric'], request.form['player_mass']]
         for i in range(len(values)):
             if values[i].isalpha() or values[i] == "":
                 values[i] = defaults[i]
             else:
                 values[i] = float(values[i])
-        return render_template("game.html", mass = values[0], fric = values[1], a = values[2])
-    return render_template("game.html", mass=defaults[0], fric=defaults[1], a=defaults[2])
+        return render_template("game.html", puck_mass = values[0], fric = values[1], player_mass=values[2])
+    return render_template("game.html", puck_mass=defaults[0], fric=defaults[1], player_mass=defaults[2])
 
 @app.route('/concepts', methods=['GET','POST'])
 def concepts():
