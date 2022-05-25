@@ -1,6 +1,11 @@
 * {
     box-sizing: border-box;
   }
+  @media only screen and (min-width: 1700px) and (min-height: 900px) {
+    body {
+        display: none;
+    }
+  }
   .circle {
     width: 140px;
     height: 140px;
