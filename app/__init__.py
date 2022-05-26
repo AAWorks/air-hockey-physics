@@ -22,10 +22,14 @@ def game():
                 values[i] = default_vals[i]
             else:
                 values[i] = float(values[i])
-        if values[1] > 0.01:
-            values[1] = 0.01
+        if values[1] > 0.05:
+           values[1] = 0.05
         return render_template("game.html", puck_mass = values[0], fric = values[1], player_mass=values[2], h=defaults["height"], w=defaults["width"], puck_r=defaults["puck_r"], player_r=defaults["player_r"])
     return render_template("game.html", puck_mass=defaults["puckmass"], fric=defaults["fric"], player_mass=defaults["playermass"], h=defaults['height'], w=defaults['width'], puck_r=defaults["puck_r"], player_r=defaults["player_r"])
+
+@app.route('/competitive', methods=['GET','POST'])
+def competitive():
+    return render_template("single_player.html", puck_mass=defaults["puckmass"], fric=defaults["fric"], player_mass=defaults["playermass"], h=defaults['height'], w=defaults['width'], puck_r=defaults["puck_r"], player_r=defaults["player_r"])
 
 @app.route('/concepts', methods=['GET','POST'])
 def concepts():
@@ -38,6 +42,14 @@ def win():
 @app.route('/lose', methods=['GET','POST'])
 def lose():
     return render_template("lose.html")
+
+@app.route('/win_comp', methods=['GET','POST'])
+def win_comp():
+    return render_template("win_comp.html")
+
+@app.route('/lose_comp', methods=['GET','POST'])
+def lose_comp():
+    return render_template("lose_comp.html")
 
 @app.route('/loading', methods=['GET', 'POST'])
 def loading():
