@@ -109,6 +109,7 @@ class Sphere {
 	}
 
 	//http://www.themcclungs.net/physics/download/H/Momentum/ElasticCollisions.pdf
+	//A thank you to reddit, youtube, codepen, and best of all the Coding Den (discord)
 	trackCollisions = function(player) {
 		function pythag(x_side, y_side) {
 			return Math.sqrt(Math.pow(x_side,2) + Math.pow(y_side,2));
