@@ -13,13 +13,17 @@ defaults = {"puckmass" : 15.0,
 
 @app.route('/', methods=['GET','POST'])
 def game():
+    default_vals = [defaults["puckmass"], defaults["fric"], defaults['playermass']]
     if request.method == 'POST':          
         values = [request.form['mass'], request.form['fric'], request.form['player_mass']]
         for i in range(len(values)):
             if values[i].isalpha() or values[i] == "":
-                values[i] = defaults[i]
+                print("happening")
+                values[i] = default_vals[i]
             else:
                 values[i] = float(values[i])
+        if values[1] > 0.01:
+            values[1] = 0.01
         return render_template("game.html", puck_mass = values[0], fric = values[1], player_mass=values[2], h=defaults["height"], w=defaults["width"], puck_r=defaults["puck_r"], player_r=defaults["player_r"])
     return render_template("game.html", puck_mass=defaults["puckmass"], fric=defaults["fric"], player_mass=defaults["playermass"], h=defaults['height'], w=defaults['width'], puck_r=defaults["puck_r"], player_r=defaults["player_r"])
 
