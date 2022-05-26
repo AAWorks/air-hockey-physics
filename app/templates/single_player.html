@@ -58,35 +58,13 @@
           var puck_mass = {{ puck_mass|tojson }};
           var player_mass = {{ player_mass|tojson }};
 	        var bheight = {{ h|tojson }} - 30,
-	          bwidth = {{ w|tojson }} - 30,
+	        bwidth = {{ w|tojson }} - 30,
             puck_r = {{ puck_r|tojson }},
             player_r = {{ player_r|tojson }};
         </script>
-        <script src="{{ url_for('static', filename='js/game.js') }}"></script>
-        <div style="width: 700px; margin: 0 auto; float: none; margin-top: 560px;">
-          <img src="{{ url_for('static', filename='images/wasd.png') }}" style="float: left;">
-          <img src="{{ url_for('static', filename='images/arrows.png') }}" style="float: right;">
+        <script src="{{ url_for('static', filename='js/single_player_game.js') }}"></script>
+        <div style="width: 200px; margin: 0 auto; float: none; margin-top: 560px;">
+          <img src="{{ url_for('static', filename='images/wasd.png') }}">
         </div>
-        <form method="post" action="/">
-            <div class="input-group mb-3" style="width: 770px; margin: 0 auto; float: none; margin-top: 720px;">
-                <div class="input-group-prepend">
-                <span class="input-group-text" id="inputGroup-sizing-default">Puck Mass</span>
-                </div>
-                <input type="text" name="mass" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
-                <div class="input-group-prepend">
-                    <span class="input-group-text" id="inputGroup-sizing-default">Friction (&micro; < 0.05)</span>
-                </div>
-                <input type="text" name="fric" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
-                <div class="input-group-prepend">
-                  <span class="input-group-text" id="inputGroup-sizing-default">Player Masses</span>
-              </div>
-              <input type="text" name="player_mass" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
-            </div>
-            <div class="input-group mb-3" style="width: 180px; margin: 0 auto; float: none;">
-                <span class="input-group-btn">
-                  <input type="submit" name="update" value="Update Variables" class="btn btn-secondary btn-lg"/> <br><br>
-                </span>
-            </div>
-        </form>
     </body>
 </html>
