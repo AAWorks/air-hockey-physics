@@ -13,7 +13,7 @@ board.height = bheight;
 board.focus();
 
 class Sphere {
-	constructor(x, y, r, m, a, c, vix, viy) {
+	constructor(x, y, r, m, a, c, vix, viy, typ) {
 		this.x_init = x;
 		this.y_init = y;
 		this.x = this.x_init;
@@ -25,6 +25,7 @@ class Sphere {
 		this.velocityX = vix;
 		this.velocityY = viy;
 		this.speed_limit = 10;
+		this.typ = typ;
 	}
 
 	playerRules = function() {
@@ -96,7 +97,8 @@ class Sphere {
 	}
 
 	move = function() {
-		var friction_a = friction*9.8 // ma = umg, m cancels out, a = ug, g ~ 9.8
+		// ma = umg, m cancels out, a = ug, g ~ 9.8
+		var friction_a = (this.typ === 'puck') ? friction*9.8 : 0.001 * 9.8;
 		if (!(this.velocityX >= -1 * friction_a && this.velocityX <= friction_a)) this.velocityX += (this.velocityX > 0) ? -1*friction_a: friction_a;
 		else this.velocityX = 0;
 		if (!(this.velocityY >= -1 * friction_a && this.velocityY <= friction_a)) this.velocityY += (this.velocityY > 0) ? -1*friction_a: friction_a;
@@ -118,8 +120,9 @@ class Sphere {
 				y: (reverse) ? (y * theta - x * phi) : (y * theta + x * phi)
 			};
 		}
-		function fix_pos(v){ //75 is total r
-			return v * ((player_r + puck_r) - Math.abs(s.x)) / (Math.abs(v1.x) + Math.abs(v2.x)) 
+		function fix_pos(v){
+			if (Math.abs(v1.x) + Math.abs(v2.x) == 0) return 0
+			return v * (80 - Math.abs(s_init.x - s.x)) / (Math.abs(v1.x) + Math.abs(v2.x)) 
 		}
 
 		var x_distance = this.x - player.x, y_distance = this.y - player.y
@@ -205,8 +208,8 @@ window.addEventListener("keydown", function(e) {
     }
 }, false);
 
-const puck = new Sphere(center_x, center_y, puck_r, puck_mass, 1, '#696969', 0, 0);
-const playerOne = new Sphere(120, center_y, player_r, player_mass, 5, '#87CEFA', 0, 0);
-const playerTwo = new Sphere(bwidth - 120, center_y, player_r, player_mass, 5, '#FF8C00', 0, 0)
+const puck = new Sphere(center_x, center_y, puck_r, puck_mass, 1, '#696969', 0, 0, "puck");
+const playerOne = new Sphere(120, center_y, player_r, player_mass, 5, '#87CEFA', 0, 0, "player");
+const playerTwo = new Sphere(bwidth - 120, center_y, player_r, player_mass, 5, '#FF8C00', 0, 0, "player")
 
 updateGame();
