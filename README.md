@@ -5,7 +5,7 @@
 ## Summary
 It's air hockey.
 
-## Objective: Put Puck In Goal
+### Objective: Put Puck In Goal
 
 ## Launch Codes
 - Open the website at http://142.93.247.52/
